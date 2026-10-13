@@ -3,15 +3,1479 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VintageRiff Studio - 아날로그 일렉기타 타브 악보 에디터 & 록 스튜디오</title>
+  <title>VintageRiff Studio - 아날로그 일렉기타 타브 악보 에디터 &amp; 록 스튜디오</title>
   <meta name="description" content="빈티지 아날로그 록 감성의 일렉기타 타브(TAB) 악보 에디터. 실시간 진공관 앰프 사운드 재생, 24프렛 로즈우드 지판 시각화, 페달보드 이펙터, 록 명곡 프리셋, 악보 출력 및 ASCII 변환 지원.">
-  <meta name="keywords" content="일렉기타, 악보, 타브악보, 기타에디터, 기타타브, 기타프로, 빈티지앰프, 펜더, 깁슨, 록기타">
+  <meta name="theme-color" content="#1a100a">
+
+  <!-- Google Fonts: Cinzel, Outfit, JetBrains Mono, Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=JetBrains+Mono:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Core Stylesheet -->
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Self-Contained Complete Design System (Netlify 단일 파일 업로드 완벽 호환) -->
+  <style>
+    /* ==========================================================================
+       VINTAGE RIFF STUDIO - MASTER DESIGN SYSTEM
+       ========================================================================== */
+    :root {
+      /* Wood & Leather Cabinet */
+      --wood-darkest: #0e0704;
+      --wood-dark: #1c0f08;
+      --wood-mid: #2e180d;
+      --wood-grain: #452414;
+      --wood-light: #6e3d22;
+      --wood-highlight: #965a36;
+      --leather-trim: #150b06;
+
+      /* Brass & Vintage Gold Hardware */
+      --brass-dark: #785813;
+      --brass-gold: #c59b27;
+      --brass-bright: #f5d471;
+      --brass-gradient: linear-gradient(180deg, #f7df8f 0%, #caa962 45%, #967426 100%);
+      --gold-foil: linear-gradient(135deg, #fff3c4 0%, #e2be67 50%, #997321 100%);
+
+      /* Glowing Tubes & Amber Accents */
+      --amber-glow: #ff9d00;
+      --amber-hot: #ff4800;
+      --amber-light: #ffc966;
+      --amber-neon: #ffaa1d;
+      --amber-shadow: rgba(255, 157, 0, 0.5);
+
+      /* Vintage Parchment Sheet */
+      --parchment-bg: #f9f5ea;
+      --parchment-card: #fffdf7;
+      --parchment-border: #d4c8af;
+      --parchment-lines: #a69880;
+      --ink-primary: #1e1915;
+      --ink-secondary: #4a3e35;
+      --ink-accent: #8b3215;
+
+      /* Fretboard */
+      --fretboard-rosewood: #23140e;
+      --fretboard-gradient: linear-gradient(180deg, #321c14 0%, #22120c 60%, #150a06 100%);
+      --fretwire-silver: #b8bcc4;
+      --inlay-pearl: radial-gradient(circle at 35% 35%, #ffffff 0%, #dce4ee 55%, #9ab0c4 100%);
+
+      /* Typography */
+      --font-display: 'Cinzel', Georgia, serif;
+      --font-ui: 'Outfit', 'Noto Sans KR', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, monospace;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      background-color: var(--wood-darkest);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 157, 0, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 85% 100%, rgba(200, 100, 30, 0.08) 0%, transparent 50%),
+        linear-gradient(rgba(14, 7, 4, 0.94), rgba(14, 7, 4, 0.98)),
+        repeating-linear-gradient(45deg, #180d07 0, #180d07 3px, #100804 3px, #100804 6px);
+      color: #ebdcc9;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+
+    /* Container Wrap */
+    .studio-cabinet-wrapper {
+      max-width: 1440px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    /* ==========================================================================
+       VINTAGE TUBE AMP HEAD CHASSIS (HEADER)
+       ========================================================================== */
+    .studio-header-amp {
+      background: var(--wood-dark);
+      background-image: linear-gradient(180deg, #2c170d 0%, #1c0e08 100%);
+      border: 5px solid #4a2817;
+      border-radius: var(--radius-xl);
+      box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.85),
+        inset 0 2px 4px rgba(255, 255, 255, 0.15),
+        inset 0 -6px 12px rgba(0, 0, 0, 0.7);
+      padding: 24px 28px;
+      position: relative;
+    }
+
+    /* Brass Corner Hardware Reinforcements */
+    .studio-header-amp::before,
+    .studio-header-amp::after {
+      content: '';
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border: 4px solid var(--brass-gold);
+      border-radius: 6px;
+      pointer-events: none;
+      box-shadow: 0 0 6px rgba(197, 155, 39, 0.4);
+    }
+    .studio-header-amp::before {
+      top: 8px;
+      left: 8px;
+      border-right: none;
+      border-bottom: none;
+    }
+    .studio-header-amp::after {
+      top: 8px;
+      right: 8px;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    /* Top Brand Bar */
+    .top-brand-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #3d2012;
+    }
+
+    .brand-emblem {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-icon-guitar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--brass-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1a0f08;
+      font-size: 26px;
+      box-shadow: 
+        0 0 20px rgba(255, 184, 77, 0.5),
+        inset 0 2px 3px rgba(255, 255, 255, 0.8),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+      border: 2px solid #fce89e;
+    }
+
+    .brand-title-wrap h1 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 2.5px;
+      background: var(--gold-foil);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.9);
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title-wrap p {
+      font-size: 13px;
+      color: #a8917e;
+      letter-spacing: 0.8px;
+      font-weight: 500;
+    }
+
+    /* Header Actions Group */
+    .header-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .preset-picker-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 6px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid #4a2817;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .preset-picker-wrap label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brass-bright);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .vintage-select {
+      background: #170d08;
+      border: 1px solid #5d351f;
+      color: #faebd7;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .vintage-select:hover,
+    .vintage-select:focus {
+      border-color: var(--brass-bright);
+      box-shadow: 0 0 10px rgba(255, 184, 77, 0.4);
+    }
+
+    /* Button System */
+    .btn-vintage {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(180deg, #3c2012 0%, #231209 100%);
+      color: #ebdcc9;
+      border: 1px solid #5a321d;
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+      user-select: none;
+    }
+    .btn-vintage:hover {
+      background: linear-gradient(180deg, #4d2a18 0%, #2e170c 100%);
+      border-color: var(--brass-gold);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.7);
+    }
+    .btn-vintage:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    .btn-vintage.active {
+      background: linear-gradient(180deg, #87551e 0%, #54320f 100%);
+      border-color: var(--brass-bright);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(255, 184, 77, 0.5);
+    }
+
+    .btn-vintage-gold {
+      background: var(--brass-gradient);
+      color: #170d06;
+      border: 1px solid #fae69e;
+      font-weight: 700;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+    .btn-vintage-gold:hover {
+      background: linear-gradient(180deg, #fbe8a5 0%, #d8b76c 45%, #a6812c 100%);
+      box-shadow: 0 0 16px rgba(255, 184, 77, 0.6);
+      color: #000;
+    }
+
+    /* Playback Control Station Bar */
+    .playback-station-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 18px;
+      padding: 14px 20px;
+      background: #140b06;
+      border-radius: var(--radius-lg);
+      border: 1px solid #3a1e0f;
+      box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .play-controls-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-play-hero {
+      padding: 10px 24px;
+      font-size: 15px;
+      background: linear-gradient(180deg, #d8962c 0%, #a1640d 100%);
+      border: 1px solid #ffd066;
+      color: #170b04;
+      font-weight: 800;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(255, 157, 0, 0.45);
+      transition: all 0.2s;
+    }
+    .btn-play-hero:hover {
+      background: linear-gradient(180deg, #efa737 0%, #b87413 100%);
+      box-shadow: 0 0 20px rgba(255, 157, 0, 0.7);
+      transform: translateY(-1px);
+    }
+    .btn-play-hero.playing {
+      background: linear-gradient(180deg, #d32f2f 0%, #9a1a1a 100%);
+      color: #fff;
+      border-color: #f87171;
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.7);
+    }
+
+    .playback-station-mid {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .tempo-control-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tempo-control-box label {
+      font-size: 13px;
+      color: var(--brass-bright);
+      font-weight: 700;
+    }
+
+    .tempo-input-num {
+      width: 64px;
+      background: #201108;
+      border: 1px solid #5a311b;
+      color: #ffb84d;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 800;
+      padding: 6px 8px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       VINTAGE ANALOG TUBE AMP & PEDALBOARD CHASSIS
+       ========================================================================== */
+    .vintage-analog-deck {
+      margin-top: 20px;
+      background: #170d08;
+      border: 2px solid #482716;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.8), 0 8px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Brushed Brass Amp Faceplate */
+    .amp-chassis-faceplate {
+      background: linear-gradient(180deg, #e4d1a0 0%, #c8a760 50%, #b28d40 100%);
+      border-bottom: 3px solid #6b4d1b;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      position: relative;
+      box-shadow: 
+        inset 0 2px 3px rgba(255, 255, 255, 0.7),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .amp-badge-plate {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .amp-metal-badge {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 17px;
+      letter-spacing: 2px;
+      color: #2b1709;
+      text-transform: uppercase;
+      border: 2px solid #563316;
+      padding: 5px 14px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Glowing 12AX7 Vacuum Tubes */
+    .vacuum-tubes-rack {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.8);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
+    }
+
+    .vacuum-tube {
+      width: 28px;
+      height: 52px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(0, 0, 0, 0.5) 100%);
+      border-radius: 14px 14px 4px 4px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset 0 0 10px rgba(255, 157, 0, 0.5);
+      transition: all 0.15s ease-out;
+    }
+
+    .tube-filament {
+      width: 6px;
+      height: 22px;
+      background: #ff5500;
+      border-radius: 3px;
+      box-shadow: 0 0 14px #ff9d00, 0 0 26px #ff5500;
+      animation: filamentGlow 2.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes filamentGlow {
+      0% { opacity: 0.8; transform: scale(0.96); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    .vacuum-tube.tube-hot .tube-filament {
+      background: #ffffff;
+      box-shadow: 0 0 18px #fff099, 0 0 34px #ff9d00;
+      transform: scale(1.2);
+    }
+
+    .tube-caption {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: bold;
+      color: #ffc966;
+      text-shadow: 0 0 8px rgba(255, 157, 0, 0.7);
+    }
+
+    /* Dynamic Analog VU Meter */
+    .vu-meter-box {
+      width: 76px;
+      height: 52px;
+      background: #fbf5df;
+      border: 2px solid #3f2513;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 4px;
+    }
+    .vu-scale-arc {
+      position: absolute;
+      top: 6px;
+      width: 60px;
+      height: 24px;
+      border-top: 2px solid #5a3c22;
+      border-radius: 50% 50% 0 0;
+      opacity: 0.8;
+    }
+    .vu-meter-needle {
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      width: 2px;
+      height: 38px;
+      background: #c0392b;
+      transform-origin: 50% 100%;
+      transform: rotate(-35deg);
+      transition: transform 0.08s ease-out;
+      border-radius: 1px;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    }
+    .vu-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      font-weight: 800;
+      color: #3b2210;
+      z-index: 2;
+    }
+
+    /* Analog Rotary Knobs Bank */
+    .amp-knobs-bank {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .knob-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .knob-group label {
+      font-size: 10px;
+      font-weight: 800;
+      font-family: var(--font-display);
+      letter-spacing: 1px;
+      color: #271407;
+      text-transform: uppercase;
+    }
+
+    .analog-knob {
+      width: 44px;
+      height: 44px;
+      background: radial-gradient(circle, #382417 0%, #1c1008 70%, #0d0603 100%);
+      border-radius: 50%;
+      border: 2px solid #5a3821;
+      position: relative;
+      cursor: ns-resize;
+      box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.6),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
+      user-select: none;
+    }
+
+    .knob-pointer {
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      width: 3px;
+      height: 12px;
+      background: #ffb84d;
+      margin-left: -1.5px;
+      border-radius: 2px;
+      transform-origin: 50% 18px;
+      box-shadow: 0 0 4px #ff9d00;
+      transition: transform 0.05s linear;
+    }
+
+    .knob-readout {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      color: #381e0f;
+    }
+
+    /* Stompbox Pedals Floor */
+    .pedalboard-floor {
+      background: #130a05;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      border-top: 1px solid #2d160b;
+    }
+
+    .pedalboard-label {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--brass-gold);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stompboxes-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .stompbox-pedal {
+      width: 140px;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 
+        0 6px 14px rgba(0, 0, 0, 0.7),
+        inset 0 1px 2px rgba(255, 255, 255, 0.35);
+      position: relative;
+    }
+
+    .pedal-screamer {
+      background: linear-gradient(180deg, #2e7d32 0%, #184c1f 100%);
+      border: 2px solid #43a047;
+    }
+    .pedal-delay {
+      background: linear-gradient(180deg, #b8860b 0%, #6b4e05 100%);
+      border: 2px solid #d4af37;
+    }
+    .pedal-reverb {
+      background: linear-gradient(180deg, #1f5f8b 0%, #0e2e44 100%);
+      border: 2px solid #2980b9;
+    }
+
+    .pedal-header {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+      text-align: center;
+    }
+
+    .pedal-led {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #331010;
+      border: 1px solid #552222;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
+      transition: all 0.2s;
+    }
+    .pedal-screamer .pedal-led.led-lit {
+      background: #ff2222;
+      border-color: #ff8888;
+      box-shadow: 0 0 10px #ff2222, 0 0 18px #ff5555;
+    }
+    .pedal-delay .pedal-led.led-lit {
+      background: #2ecc71;
+      border-color: #a3e4d7;
+      box-shadow: 0 0 10px #2ecc71, 0 0 18px #58d68d;
+    }
+    .pedal-reverb .pedal-led.led-lit {
+      background: #3498db;
+      border-color: #aed6f1;
+      box-shadow: 0 0 10px #3498db, 0 0 18px #5dade2;
+    }
+
+    .stomp-footswitch {
+      width: 32px;
+      height: 32px;
+      background: radial-gradient(circle, #e0e0e0 0%, #9e9e9e 60%, #616161 100%);
+      border-radius: 50%;
+      border: 2px solid #424242;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6), inset 0 1px 2px #fff;
+      cursor: pointer;
+      transition: transform 0.08s;
+    }
+    .stomp-footswitch:hover { filter: brightness(1.1); }
+    .stomp-footswitch.pressed { transform: scale(0.92); }
+
+    /* ==========================================================================
+       VINTAGE ROSEWOOD FRETBOARD COMPONENT
+       ========================================================================== */
+    .fretboard-section-card {
+      margin-top: 20px;
+      background: #170e08;
+      border: 3px solid #4a2817;
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75);
+    }
+
+    .fretboard-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #3d2012;
+    }
+
+    .fretboard-title-tag {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--brass-gold);
+      letter-spacing: 1px;
+    }
+
+    .fretboard-scale-helper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .fretboard-scale-helper label {
+      font-size: 12px;
+      color: #a8917e;
+      font-weight: 600;
+    }
+
+    .vintage-fretboard-wrap {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .fret-number-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+      min-width: 960px;
+    }
+
+    .fret-num-label {
+      text-align: center;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: #7d6553;
+      user-select: none;
+    }
+    .fret-num-label.has-marker {
+      color: var(--brass-bright);
+      font-weight: bold;
+    }
+    .nut-label {
+      width: 38px;
+      min-width: 38px;
+      color: #a89482;
+    }
+
+    .fretboard-neck {
+      min-width: 960px;
+      height: 144px;
+      background: var(--fretboard-gradient);
+      border-radius: 4px;
+      position: relative;
+      display: flex;
+      border-top: 3px solid #5a351f;
+      border-bottom: 3px solid #5a351f;
+      box-shadow: 
+        0 8px 18px rgba(0, 0, 0, 0.85),
+        inset 0 3px 6px rgba(255, 255, 255, 0.1),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .fret-nut {
+      width: 38px;
+      min-width: 38px;
+      height: 100%;
+      background: linear-gradient(90deg, #3d2c1f 0%, #ede6d3 50%, #4a3626 100%);
+      border-right: 2px solid #23160e;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .fret-column {
+      height: 100%;
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .fret-wire {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 2.5px;
+      height: 100%;
+      background: linear-gradient(90deg, #959aa3 0%, #e0e3e8 40%, #585c64 100%);
+      box-shadow: 1px 0 2px rgba(0, 0, 0, 0.6);
+      z-index: 2;
+    }
+
+    .pearloid-dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--inlay-pearl);
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9), 0 0 3px rgba(0, 0, 0, 0.6);
+      z-index: 1;
+    }
+    .single-dot {
+      top: 50%;
+      left: 50%;
+      margin-top: -7px;
+      margin-left: -7px;
+    }
+    .double-dot-top {
+      top: 25%;
+      left: 50%;
+      margin-top: -7px;
+      margin-left: -7px;
+    }
+    .double-dot-bottom {
+      top: 75%;
+      left: 50%;
+      margin-top: -7px;
+      margin-left: -7px;
+    }
+
+    .fretboard-strings-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 8px 0;
+      z-index: 3;
+    }
+
+    .guitar-string-row {
+      display: flex;
+      align-items: center;
+      position: relative;
+      height: 18px;
+    }
+
+    .string-wire {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      pointer-events: none;
+    }
+    .string-wire.string-6 {
+      height: 3.8px;
+      background: repeating-linear-gradient(90deg, #caa464 0, #caa464 1.5px, #876729 1.5px, #876729 3px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    }
+    .string-wire.string-5 {
+      height: 3.2px;
+      background: repeating-linear-gradient(90deg, #caa464 0, #caa464 1.5px, #876729 1.5px, #876729 3px);
+    }
+    .string-wire.string-4 {
+      height: 2.5px;
+      background: repeating-linear-gradient(90deg, #caa464 0, #caa464 1.5px, #876729 1.5px, #876729 3px);
+    }
+    .string-wire.string-3 {
+      height: 1.8px;
+      background: linear-gradient(180deg, #e4e7eb 0%, #8d939e 100%);
+    }
+    .string-wire.string-2 {
+      height: 1.3px;
+      background: linear-gradient(180deg, #e4e7eb 0%, #8d939e 100%);
+    }
+    .string-wire.string-1 {
+      height: 1.0px;
+      background: #e4e7eb;
+    }
+
+    .note-spot {
+      height: 18px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 4;
+    }
+    .nut-spot { width: 38px; min-width: 38px; }
+
+    .note-marker {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: bold;
+      color: #fff;
+      transition: all 0.1s;
+    }
+    .note-spot:hover .note-marker {
+      display: flex;
+      background: #ffb84d;
+      color: #1b0e07;
+      transform: scale(1.2);
+    }
+    .note-spot.playing-note .note-marker,
+    .note-spot.playback-active .note-marker {
+      display: flex;
+      background: #ff9d00;
+      color: #000;
+      box-shadow: 0 0 10px #ff9d00, 0 0 18px #ff5500;
+      transform: scale(1.3);
+    }
+
+    .note-spot.scale-note .note-marker {
+      display: flex;
+      background: rgba(46, 204, 113, 0.75);
+      color: #fff;
+    }
+    .note-spot.root-note .note-marker {
+      display: flex;
+      background: #ffb84d;
+      color: #1b0e07;
+      box-shadow: 0 0 8px #ffb84d;
+      transform: scale(1.15);
+    }
+    .note-spot.blue-note .note-marker {
+      display: flex;
+      background: #3498db;
+      color: #fff;
+      box-shadow: 0 0 8px #3498db;
+    }
+
+    /* ==========================================================================
+       TAB EDITOR TOOLBAR & TECHNIQUES
+       ========================================================================== */
+    .tab-editor-toolbar {
+      margin-top: 20px;
+      background: #190f09;
+      border: 2px solid #4a2817;
+      border-radius: var(--radius-md);
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--brass-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-technique {
+      background: #25140b;
+      border: 1px solid #5a311b;
+      color: #d8c3ad;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-technique:hover {
+      border-color: var(--brass-gold);
+      color: #fff;
+      background: #381e10;
+    }
+    .btn-technique strong { color: var(--brass-bright); }
+
+    /* ==========================================================================
+       VINTAGE PARCHMENT TAB SHEET & NOTATION CANVAS
+       ========================================================================== */
+    .tab-sheet-card {
+      margin-top: 20px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.85);
+    }
+
+    /* Vintage Parchment Mode (Default) */
+    .vintage-tab-sheet {
+      background: var(--parchment-bg);
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4) 0%, transparent 80%),
+        repeating-linear-gradient(0deg, rgba(160, 140, 110, 0.05) 0, rgba(160, 140, 110, 0.05) 1px, transparent 1px, transparent 26px);
+      border: 5px solid #c8baa2;
+      padding: 28px 32px;
+      color: var(--ink-primary);
+      min-height: 480px;
+    }
+
+    .tab-song-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px dashed var(--parchment-border);
+    }
+
+    .song-title-input {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--ink-accent);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      outline: none;
+      width: 100%;
+      max-width: 480px;
+      transition: border 0.2s;
+    }
+    .song-title-input:focus { border-bottom-color: var(--ink-accent); }
+
+    .song-artist-input {
+      font-family: var(--font-ui);
+      font-size: 15px;
+      font-style: italic;
+      color: var(--ink-secondary);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid transparent;
+      outline: none;
+      width: 100%;
+      max-width: 320px;
+    }
+    .song-artist-input:focus { border-bottom-color: var(--ink-secondary); }
+
+    .banner-meta-area {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .meta-tag {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      background: rgba(0, 0, 0, 0.05);
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--parchment-border);
+    }
+
+    .tab-measures-container {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .tab-measure-block {
+      background: var(--parchment-card);
+      border: 1px solid var(--parchment-border);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+      position: relative;
+    }
+
+    .measure-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .measure-info-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .measure-number-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      background: #3e281c;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .measure-chord-input {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink-accent);
+      background: transparent;
+      border: 1px dashed var(--parchment-border);
+      border-radius: 4px;
+      padding: 3px 8px;
+      width: 110px;
+      outline: none;
+    }
+
+    .measure-section-input {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      background: transparent;
+      border: 1px dashed var(--parchment-border);
+      border-radius: 4px;
+      padding: 3px 8px;
+      width: 120px;
+      outline: none;
+    }
+
+    .measure-actions-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .measure-subdiv-select {
+      font-size: 11px;
+      padding: 3px 6px;
+      border: 1px solid var(--parchment-border);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--ink-primary);
+      outline: none;
+    }
+
+    .measure-icon-btn {
+      background: none;
+      border: 1px solid var(--parchment-border);
+      border-radius: 4px;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.15s;
+    }
+    .measure-icon-btn:hover { background: #eee6d6; color: var(--ink-primary); }
+    .measure-icon-btn.btn-danger:hover { background: #fde8e8; color: #c0392b; border-color: #e74c3c; }
+
+    .tab-staff-body {
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 6px 0;
+    }
+
+    .tab-string-labels {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 156px;
+      padding-right: 14px;
+      border-right: 2px solid #5a4b3d;
+    }
+
+    .string-name-cell {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink-accent);
+      user-select: none;
+    }
+
+    .measure-grid-columns {
+      display: flex;
+      flex: 1;
+      position: relative;
+      background-image: 
+        repeating-linear-gradient(
+          0deg,
+          transparent 0,
+          transparent 12px,
+          var(--parchment-lines) 12px,
+          var(--parchment-lines) 13px,
+          transparent 13px,
+          transparent 26px
+        );
+      height: 156px;
+    }
+
+    .beat-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      border-right: 1px dashed rgba(160, 140, 110, 0.4);
+      position: relative;
+    }
+    .beat-column.playing-beat { background: rgba(255, 157, 0, 0.15); }
+
+    .measure-playhead {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      background: rgba(255, 157, 0, 0.3);
+      border-left: 2px solid #ff9d00;
+      border-right: 2px solid #ff9d00;
+      box-shadow: 0 0 12px rgba(255, 157, 0, 0.6);
+      pointer-events: none;
+      z-index: 5;
+      transition: left 0.05s linear;
+    }
+
+    .tab-cell {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+    }
+    .tab-cell.tab-cursor {
+      outline: 2px solid #ff9d00;
+      outline-offset: -1px;
+      background: rgba(255, 157, 0, 0.22);
+      border-radius: 2px;
+    }
+
+    .fret-number-badge {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 800;
+      color: #1b120c;
+      background: var(--parchment-card);
+      padding: 0 4px;
+      border-radius: 3px;
+      z-index: 2;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+    .fret-number-badge.note-dead { color: #c0392b; font-weight: 900; }
+    .fret-number-badge.note-harmonic { color: #2980b9; }
+    .fret-number-badge.note-ghost { color: #7f8c8d; }
+
+    .tech-markers-wrap {
+      position: absolute;
+      top: -8px;
+      display: flex;
+      gap: 2px;
+      z-index: 3;
+    }
+    .tech-tag {
+      font-size: 9px;
+      font-family: var(--font-mono);
+      font-weight: bold;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    .tag-bend { color: #d35400; }
+    .tag-slide { color: #27ae60; }
+    .tag-hammer { color: #2980b9; }
+    .tag-pull { color: #8e44ad; }
+    .tag-vib { color: #d35400; font-size: 11px; }
+    .tag-pm { color: #7f8c8d; font-size: 8px; }
+
+    .measure-bar-line {
+      width: 4px;
+      height: 156px;
+      background: #3e281c;
+      margin-left: 4px;
+    }
+
+    .btn-add-measure-card {
+      width: 100%;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.04);
+      border: 2px dashed var(--parchment-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-add-measure-card:hover {
+      background: rgba(255, 157, 0, 0.1);
+      border-color: #ff9d00;
+      color: #1b120c;
+    }
+
+    /* Dark Tweed Theme Toggle */
+    body.vintage-dark-sheet .vintage-tab-sheet {
+      background: #19120c;
+      background-image: repeating-linear-gradient(45deg, #1d140e 0, #1d140e 2px, #160f09 2px, #160f09 4px);
+      border-color: #4a2c1b;
+      color: #f0e2d3;
+    }
+    body.vintage-dark-sheet .tab-song-banner { border-bottom-color: #3d2315; }
+    body.vintage-dark-sheet .song-title-input { color: var(--brass-bright); }
+    body.vintage-dark-sheet .song-artist-input { color: #a8917e; }
+    body.vintage-dark-sheet .tab-measure-block {
+      background: #24170f;
+      border-color: #4a2c1b;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+    }
+    body.vintage-dark-sheet .string-name-cell { color: var(--brass-bright); }
+    body.vintage-dark-sheet .measure-grid-columns {
+      background-image: 
+        repeating-linear-gradient(
+          0deg,
+          transparent 0,
+          transparent 12px,
+          #4a3324 12px,
+          #4a3324 13px,
+          transparent 13px,
+          transparent 26px
+        );
+    }
+    body.vintage-dark-sheet .fret-number-badge {
+      background: #2b1b11;
+      color: #fff;
+      border: 1px solid #6b4329;
+    }
+    body.vintage-dark-sheet .measure-bar-line { background: var(--brass-gold); }
+
+    /* Modals */
+    .vintage-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .vintage-modal-overlay.modal-open { display: flex; }
+
+    .vintage-modal-card {
+      background: #21140d;
+      border: 3px solid #4a2817;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 820px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      background: #2b1910;
+      border-bottom: 2px solid #4a2817;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--brass-bright);
+    }
+    .btn-close-modal {
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #a8917e;
+      cursor: pointer;
+    }
+    .btn-close-modal:hover { color: #fff; }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .chord-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .chord-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 16px;
+    }
+    .chord-card {
+      background: #180f0a;
+      border: 1px solid #4a2817;
+      border-radius: var(--radius-md);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .chord-card:hover {
+      border-color: var(--brass-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+    }
+    .chord-card-actions { display: flex; gap: 6px; width: 100%; }
+    .btn-preview-chord {
+      flex: 1;
+      background: #2d180d;
+      border: 1px solid #5a3420;
+      color: var(--brass-bright);
+      border-radius: 4px;
+      padding: 5px;
+      cursor: pointer;
+    }
+    .btn-insert-chord {
+      flex: 2;
+      background: var(--brass-gradient);
+      border: none;
+      color: #170d06;
+      font-weight: bold;
+      border-radius: 4px;
+      padding: 5px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .ascii-box {
+      width: 100%;
+      height: 280px;
+      background: #140c08;
+      color: #ffb84d;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 14px;
+      border: 1px solid #4a2817;
+      border-radius: var(--radius-sm);
+      outline: none;
+      resize: vertical;
+      line-height: 1.45;
+      white-space: pre;
+    }
+
+    .modal-actions-footer {
+      padding: 14px 20px;
+      background: #1a0f09;
+      border-top: 1px solid #3d2012;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Print View */
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      .studio-header-amp, .vintage-analog-deck, .fretboard-section-card,
+      .tab-editor-toolbar, .btn-add-measure-card, .measure-actions-right,
+      .vintage-modal-overlay { display: none !important; }
+      .vintage-tab-sheet { border: none !important; background: #fff !important; padding: 0 !important; }
+      .tab-measure-block { break-inside: avoid; box-shadow: none !important; border: 1px solid #999 !important; }
+    }
+  </style>
 </head>
 <body>
 
@@ -142,6 +1606,13 @@
               </div>
               <span class="tube-caption">12AX7 TUBES</span>
             </div>
+
+            <!-- Dynamic VU Meter -->
+            <div class="vu-meter-box">
+              <div class="vu-scale-arc"></div>
+              <div class="vu-meter-needle" id="analog-vu-needle"></div>
+              <span class="vu-label">OUTPUT VU</span>
+            </div>
           </div>
 
           <!-- Rotary Dials & Knobs -->
@@ -232,7 +1703,7 @@
     <section class="fretboard-section-card" aria-label="기타 지판 시각화">
       <div class="fretboard-toolbar">
         <span class="fretboard-title-tag">
-          <i class="fas fa-grip-lines"></i> 22프렛 빈티지 로즈우드 지판 (클릭하여 악보에 음표 입력 및 사운드 테스트)
+          <i class="fas fa-grip-lines"></i> 22프렛 빈티지 로즈우드 지판 (지판을 클릭하면 음이 재생되고 악보에 바로 입력됩니다)
         </span>
 
         <div class="fretboard-scale-helper">
@@ -313,7 +1784,7 @@
             <option value="Barre">바레 코드 (Barre Chords)</option>
             <option value="Vintage Rock">빈티지 록 &amp; 헨드릭스 코드</option>
           </select>
-          <span style="font-size:12px; color:var(--text-muted); margin-left:auto;">
+          <span style="font-size:12px; color:#a8917e; margin-left:auto;">
             * 각 카드의 [삽입] 버튼을 누르면 현재 선택된 마디/박자에 코드가 바로 입력됩니다.
           </span>
         </div>
@@ -330,8 +1801,8 @@
         <button class="btn-close-modal" id="btn-close-ascii-modal">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">
-          커뮤니티나 메모장에 복사할 수 있는 표준 6줄 타브 텍스트입니다. 다른 웹사이트의 타브 텍스트를 붙여넣고 [악보로 불러오기]를 누르면 에디터로 임포트됩니다.
+        <p style="font-size:13px; color:#a8917e; margin-bottom:10px;">
+          커뮤니티나 메모장에 복사할 수 있는 표준 6줄 타브 텍스트입니다. 다른 사이트의 타브 텍스트를 붙여넣고 [텍스트를 악보로 불러오기]를 누르면 에디터로 임포트됩니다.
         </p>
         <textarea id="ascii-textarea" class="ascii-box" spellcheck="false"></textarea>
       </div>
@@ -346,7 +1817,7 @@
     </div>
   </div>
 
-  <!-- Application Logic Scripts -->
+  <!-- Scripts: Loaded from files or fallback inline -->
   <script src="js/audio-engine.js"></script>
   <script src="js/tab-model.js"></script>
   <script src="js/chords-library.js"></script>
@@ -356,5 +1827,28 @@
   <script src="js/tab-renderer.js"></script>
   <script src="js/io-manager.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- VU Needle Live Sync -->
+  <script>
+    // VU needle dynamics simulation
+    window.bounceVUNeedle = function() {
+      const needle = document.getElementById('analog-vu-needle');
+      if (needle) {
+        const randAngle = Math.floor(Math.random() * 45) - 10; // -10deg to +35deg
+        needle.style.transform = `rotate(${randAngle}deg)`;
+        setTimeout(() => {
+          needle.style.transform = 'rotate(-35deg)';
+        }, 180);
+      }
+    };
+    // Hook into note play
+    const originalPlayNote = window.guitarAudio?.playNote;
+    if (window.guitarAudio) {
+      window.guitarAudio.playNote = function(...args) {
+        window.bounceVUNeedle();
+        return originalPlayNote.apply(this, args);
+      };
+    }
+  </script>
 </body>
 </html>
