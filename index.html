@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VintageRiff Studio - 아날로그 일렉기타 타브 악보 에디터 & 록 스튜디오</title>
+  <meta name="description" content="빈티지 아날로그 록 감성의 일렉기타 타브(TAB) 악보 에디터. 실시간 진공관 앰프 사운드 재생, 24프렛 로즈우드 지판 시각화, 페달보드 이펙터, 록 명곡 프리셋, 악보 출력 및 ASCII 변환 지원.">
+  <meta name="keywords" content="일렉기타, 악보, 타브악보, 기타에디터, 기타타브, 기타프로, 빈티지앰프, 펜더, 깁슨, 록기타">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="studio-cabinet-wrapper">
+    <!-- Top Amp Head & Studio Header -->
+    <header class="studio-header-amp">
+      <div class="top-brand-bar">
+        <div class="brand-emblem">
+          <div class="brand-icon-guitar" id="brand-logo-icon">
+            <i class="fas fa-guitar"></i>
+          </div>
+          <div class="brand-title-wrap">
+            <h1>VINTAGE RIFF STUDIO</h1>
+            <p>아날로그 일렉기타 타브 악보 에디터 &amp; 빈티지 앰프 사운드 엔진</p>
+          </div>
+        </div>
+
+        <div class="header-actions-group">
+          <!-- Preset Riffs Selector -->
+          <div class="preset-picker-wrap">
+            <label for="preset-select"><i class="fas fa-record-vinyl"></i> 록 명곡 프리셋:</label>
+            <select id="preset-select" class="vintage-select">
+              <option value="smoke_on_the_water">Deep Purple - Smoke on the Water (1972)</option>
+              <option value="sweet_child_o_mine">Guns N' Roses - Sweet Child O' Mine (1987)</option>
+              <option value="stairway_to_heaven">Led Zeppelin - Stairway to Heaven (1971)</option>
+              <option value="back_in_black">AC/DC - Back in Black (1980)</option>
+              <option value="purple_haze">Jimi Hendrix - Purple Haze (1967)</option>
+              <option value="come_as_you_are">Nirvana - Come As You Are (1991)</option>
+              <option value="new_song">+ 새 악보 작성 (New Tab)</option>
+            </select>
+          </div>
+
+          <!-- Chord Library Button -->
+          <button id="btn-open-chords" class="btn-vintage btn-vintage-gold" title="록 코드 다이어그램 모음집">
+            <i class="fas fa-book-open"></i> 코드 도감 (Chords)
+          </button>
+
+          <!-- ASCII Tab Button -->
+          <button id="btn-open-ascii" class="btn-vintage" title="텍스트 타브 악보 복사 / 불러오기">
+            <i class="fas fa-file-code"></i> ASCII 타브
+          </button>
+
+          <!-- Project Save/Load Buttons -->
+          <button id="btn-download-vtab" class="btn-vintage" title="프로젝트 파일 다운로드 (.vtab)">
+            <i class="fas fa-save"></i> 저장
+          </button>
+          <button id="btn-upload-vtab" class="btn-vintage" title="프로젝트 파일 열기 (.vtab)">
+            <i class="fas fa-folder-open"></i> 불러오기
+          </button>
+          <input type="file" id="vtab-file-input" accept=".vtab,.json" style="display:none;" />
+
+          <!-- Print / PDF Button -->
+          <button id="btn-print-tab" class="btn-vintage" title="인쇄 및 PDF 악보 내보내기">
+            <i class="fas fa-print"></i> 인쇄 / PDF
+          </button>
+
+          <!-- Theme Toggle -->
+          <button id="btn-theme-style-toggle" class="btn-vintage" title="파치먼트 양장본 vs 다크 트위드">
+            <i class="fas fa-moon"></i> 다크 트위드 테마
+          </button>
+        </div>
+      </div>
+
+      <!-- Playback Control Station -->
+      <div class="playback-station-bar">
+        <div class="play-controls-left">
+          <button id="btn-play-toggle" class="btn-play-hero" title="재생 / 일시정지 (스페이스바)">
+            <i class="fas fa-play"></i> 재생 (Space)
+          </button>
+          <button id="btn-stop-rewind" class="btn-vintage" title="정지 및 맨 처음으로">
+            <i class="fas fa-backward-step"></i> 처음으로
+          </button>
+          <button id="btn-loop-toggle" class="btn-vintage active" title="반복 연습 루프 모드">
+            <i class="fas fa-repeat"></i> 무한 루프
+          </button>
+          <button id="btn-metro-toggle" class="btn-vintage" title="메트로놈 클릭음 켜기/끄기">
+            <i class="fas fa-stopwatch"></i> 메트로놈
+          </button>
+        </div>
+
+        <div class="playback-station-mid">
+          <!-- Tempo BPM -->
+          <div class="tempo-control-box">
+            <label for="tempo-bpm-input"><i class="fas fa-tachometer-alt"></i> 템포 (BPM):</label>
+            <input type="number" id="tempo-bpm-input" class="tempo-input-num" min="40" max="240" value="114">
+          </div>
+
+          <!-- Speed Multiplier -->
+          <div class="tempo-control-box">
+            <label for="playback-speed-select"><i class="fas fa-gauge-simple-high"></i> 연습 속도:</label>
+            <select id="playback-speed-select" class="vintage-select">
+              <option value="0.5">50% (느린 연습)</option>
+              <option value="0.75">75% (중간 속도)</option>
+              <option value="1.0" selected>100% (원곡 속도)</option>
+              <option value="1.25">125% (빠른 속도)</option>
+            </select>
+          </div>
+
+          <!-- Tuning Selector -->
+          <div class="tempo-control-box">
+            <label for="tuning-select"><i class="fas fa-sliders"></i> 기타 튜닝:</label>
+            <select id="tuning-select" class="vintage-select">
+              <option value="standard">Standard (E A D G B E)</option>
+              <option value="dropD">Drop D (D A D G B E)</option>
+              <option value="halfStep">Eb Standard (Half-step Down)</option>
+              <option value="dadgad">DADGAD (Celtic / Folk)</option>
+              <option value="openG">Open G (Rolling Stones)</option>
+              <option value="openD">Open D (Blues Slide)</option>
+              <option value="dropC">Drop C (Heavy Metal)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vintage Analog Tube Amp & FX Pedalboard Deck -->
+      <section class="vintage-analog-deck" aria-label="진공관 앰프 및 페달보드 컨트롤">
+        <!-- Amp Chassis Faceplate -->
+        <div class="amp-chassis-faceplate">
+          <div class="amp-badge-plate">
+            <div class="amp-metal-badge">CUSTOM 50W TUBE AMP</div>
+            <!-- Glowing Vacuum Tubes -->
+            <div class="vacuum-tubes-rack">
+              <div class="vacuum-tube">
+                <div class="tube-filament"></div>
+              </div>
+              <div class="vacuum-tube">
+                <div class="tube-filament"></div>
+              </div>
+              <span class="tube-caption">12AX7 TUBES</span>
+            </div>
+          </div>
+
+          <!-- Rotary Dials & Knobs -->
+          <div class="amp-knobs-bank">
+            <div class="knob-group">
+              <label>VOLUME</label>
+              <div class="analog-knob" data-param="volume" data-min="0" data-max="100" data-value="80">
+                <div class="knob-pointer"></div>
+              </div>
+              <span class="knob-readout">80</span>
+            </div>
+
+            <div class="knob-group">
+              <label>OVERDRIVE</label>
+              <div class="analog-knob" data-param="drive" data-min="0" data-max="100" data-value="45">
+                <div class="knob-pointer"></div>
+              </div>
+              <span class="knob-readout">45</span>
+            </div>
+
+            <div class="knob-group">
+              <label>TONE / EQ</label>
+              <div class="analog-knob" data-param="tone" data-min="0" data-max="100" data-value="65">
+                <div class="knob-pointer"></div>
+              </div>
+              <span class="knob-readout">65</span>
+            </div>
+
+            <div class="knob-group">
+              <label>REVERB</label>
+              <div class="analog-knob" data-param="reverb" data-min="0" data-max="100" data-value="40">
+                <div class="knob-pointer"></div>
+              </div>
+              <span class="knob-readout">40</span>
+            </div>
+
+            <div class="knob-group">
+              <label>TAPE DELAY</label>
+              <div class="analog-knob" data-param="delay" data-min="0" data-max="100" data-value="25">
+                <div class="knob-pointer"></div>
+              </div>
+              <span class="knob-readout">25</span>
+            </div>
+
+            <div class="knob-group">
+              <label>TEMPO DIAL</label>
+              <div class="analog-knob" data-param="bpm" data-min="40" data-max="240" data-value="114">
+                <div class="knob-pointer"></div>
+              </div>
+              <span class="knob-readout">114 BPM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stompbox Pedals Floor -->
+        <div class="pedalboard-floor">
+          <div class="pedalboard-label">
+            <i class="fas fa-wave-square"></i> ANALOG PEDALBOARD:
+          </div>
+
+          <div class="stompboxes-row">
+            <!-- Overdrive Stompbox -->
+            <div class="stompbox-pedal pedal-screamer pedal-on" data-pedal="drive">
+              <span class="pedal-header">VINTAGE SCREAMER</span>
+              <div class="pedal-led led-lit"></div>
+              <button class="stomp-footswitch" title="오버드라이브 페달 켜기/끄기"></button>
+            </div>
+
+            <!-- Tape Delay Stompbox -->
+            <div class="stompbox-pedal pedal-delay" data-pedal="delay">
+              <span class="pedal-header">ANALOG DELAY</span>
+              <div class="pedal-led"></div>
+              <button class="stomp-footswitch" title="아날로그 딜레이 페달 켜기/끄기"></button>
+            </div>
+
+            <!-- Spring Reverb Stompbox -->
+            <div class="stompbox-pedal pedal-reverb pedal-on" data-pedal="reverb">
+              <span class="pedal-header">SPRING REVERB</span>
+              <div class="pedal-led led-lit"></div>
+              <button class="stomp-footswitch" title="스프링 리버브 페달 켜기/끄기"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <!-- Interactive Rosewood Fretboard -->
+    <section class="fretboard-section-card" aria-label="기타 지판 시각화">
+      <div class="fretboard-toolbar">
+        <span class="fretboard-title-tag">
+          <i class="fas fa-grip-lines"></i> 22프렛 빈티지 로즈우드 지판 (클릭하여 악보에 음표 입력 및 사운드 테스트)
+        </span>
+
+        <div class="fretboard-scale-helper">
+          <label for="scale-root-select">근음:</label>
+          <select id="scale-root-select" class="vintage-select">
+            <option value="A" selected>A</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="G">G</option>
+            <option value="B">B</option>
+            <option value="F">F</option>
+          </select>
+
+          <label for="scale-select">스케일 가이드:</label>
+          <select id="scale-select" class="vintage-select">
+            <option value="none">가이드 끄기 (None)</option>
+            <option value="pentatonicMinor">마이너 펜타토닉 (Rock Solos)</option>
+            <option value="blues">블루스 스케일 (Blues Scale + b5)</option>
+            <option value="pentatonicMajor">메이저 펜타토닉</option>
+            <option value="naturalMinor">내추럴 마이너 (Aeolian)</option>
+            <option value="major">메이저 스케일 (Ionian)</option>
+            <option value="dorian">도리안 모드 (Dorian)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Fretboard Mount -->
+      <div id="fretboard-mount"></div>
+    </section>
+
+    <!-- Tab Editor Action Palette & Toolbar -->
+    <nav class="tab-editor-toolbar" aria-label="타브 악보 편집 툴바">
+      <div class="toolbar-group">
+        <span class="toolbar-label"><i class="fas fa-hand-sparkles"></i> 주법 (Techniques):</span>
+        <button class="btn-technique" data-tech="bend" title="벤딩/초킹 (단축키: b)"><strong>b</strong> 벤딩</button>
+        <button class="btn-technique" data-tech="slide" title="슬라이드 (단축키: s 또는 /)"><strong>/</strong> 슬라이드</button>
+        <button class="btn-technique" data-tech="hammerOn" title="해머링 온 (단축키: h)"><strong>h</strong> 해머링</button>
+        <button class="btn-technique" data-tech="pullOff" title="풀링 오프 (단축키: p)"><strong>p</strong> 풀링</button>
+        <button class="btn-technique" data-tech="vibrato" title="비브라토 (단축키: v 또는 ~)"><strong>~</strong> 비브라토</button>
+        <button class="btn-technique" data-tech="palmMute" title="팜 뮤트 (단축키: m)"><strong>P.M.</strong> 팜뮤트</button>
+        <button class="btn-technique" data-tech="dead" title="뮤트/데드 노트 (단축키: x)"><strong>X</strong> 데드노트</button>
+      </div>
+
+      <div class="toolbar-group">
+        <button id="btn-add-measure" class="btn-vintage" title="새 마디 추가">
+          <i class="fas fa-plus"></i> 마디 추가
+        </button>
+        <button id="btn-undo" class="btn-vintage" title="실행 취소 (Ctrl+Z)">
+          <i class="fas fa-undo"></i> 실행 취소
+        </button>
+        <button id="btn-redo" class="btn-vintage" title="다시 실행 (Ctrl+Y)">
+          <i class="fas fa-redo"></i> 다시 실행
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main TAB Notation Sheet -->
+    <main class="tab-sheet-card">
+      <div id="tab-sheet-container"></div>
+    </main>
+  </div>
+
+  <!-- Modal: Chord Library -->
+  <div class="vintage-modal-overlay" id="modal-chord-library">
+    <div class="vintage-modal-card">
+      <div class="modal-header">
+        <h3><i class="fas fa-book-open"></i> 록 기타 코드 도감 &amp; 운지법 (Chord Library)</h3>
+        <button class="btn-close-modal" id="btn-close-chord-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="chord-filter-row">
+          <label for="chord-category-filter"><i class="fas fa-filter"></i> 카테고리:</label>
+          <select id="chord-category-filter" class="vintage-select">
+            <option value="All">전체 코드 보기</option>
+            <option value="Open">오픈 코드 (Open Chords)</option>
+            <option value="Power">파워 코드 (Power Chords)</option>
+            <option value="Barre">바레 코드 (Barre Chords)</option>
+            <option value="Vintage Rock">빈티지 록 &amp; 헨드릭스 코드</option>
+          </select>
+          <span style="font-size:12px; color:var(--text-muted); margin-left:auto;">
+            * 각 카드의 [삽입] 버튼을 누르면 현재 선택된 마디/박자에 코드가 바로 입력됩니다.
+          </span>
+        </div>
+        <div class="chord-cards-grid" id="chord-cards-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: ASCII TAB Export / Import -->
+  <div class="vintage-modal-overlay" id="modal-ascii-tab">
+    <div class="vintage-modal-card">
+      <div class="modal-header">
+        <h3><i class="fas fa-file-code"></i> ASCII 텍스트 타브 악보 (내보내기 &amp; 불러오기)</h3>
+        <button class="btn-close-modal" id="btn-close-ascii-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">
+          커뮤니티나 메모장에 복사할 수 있는 표준 6줄 타브 텍스트입니다. 다른 웹사이트의 타브 텍스트를 붙여넣고 [악보로 불러오기]를 누르면 에디터로 임포트됩니다.
+        </p>
+        <textarea id="ascii-textarea" class="ascii-box" spellcheck="false"></textarea>
+      </div>
+      <div class="modal-actions-footer">
+        <button id="btn-copy-ascii" class="btn-vintage btn-vintage-gold">
+          <i class="fas fa-copy"></i> 클립보드에 복사
+        </button>
+        <button id="btn-import-ascii" class="btn-vintage">
+          <i class="fas fa-file-import"></i> 텍스트를 악보로 불러오기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic Scripts -->
+  <script src="js/audio-engine.js"></script>
+  <script src="js/tab-model.js"></script>
+  <script src="js/chords-library.js"></script>
+  <script src="js/presets.js"></script>
+  <script src="js/fretboard.js"></script>
+  <script src="js/pedalboard.js"></script>
+  <script src="js/tab-renderer.js"></script>
+  <script src="js/io-manager.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
